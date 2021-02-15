@@ -1,0 +1,9 @@
+{
+  "name": "majsoul_ai",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "license": "MIT",
+  "dependencies": {
+    "mjsoul": "^2.2.0"
+  }
+}
