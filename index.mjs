@@ -1,5 +1,5 @@
-import operator from "./operator.mjs";
-import ai from "./ai/ai.mjs";
+import operator from "./ai/operator.mjs";
+import AIManager from "./ai/AIManager.mjs";
 import MJSoul from "mjsoul"
 
 let mjsoul = new MJSoul({
@@ -26,7 +26,7 @@ let login = async () => {
 
     console.log("加入房间...")
     await mjsoul.sendAsync("joinRoom", {
-        room_id: 11154
+        room_id: 96767
     })
 
     console.log("准备...")
@@ -54,7 +54,7 @@ mjsoul.on("NotifyRoomGameStart", async (data) => {
 
 });
 
-let aiIns = new ai(new operator(game));
+let aiIns = new AIManager(new operator(game));
 
 
 game.on("ActionPrototype", async (data) => {
@@ -64,7 +64,7 @@ game.on("ActionPrototype", async (data) => {
         console.log("进入游戏!");
     }
     if (data.name === "ActionNewRound") {
-        aiIns.onGameStart(data.data.tiles)
+        await aiIns.onGameStart(data.data.tiles)
     }
     if (data.name === "ActionDealTile") {
         if (data.data.seat === undefined){
@@ -80,7 +80,7 @@ game.on("ActionPrototype", async (data) => {
             if (data.data.operation.seat === seat){
                 let operationList = data.data.operation.operation_list;
                 if (operationList != null) {
-                    await aiIns.waitOperation(operationList);
+                    await aiIns.waitOperation(data);
                 }
             }
         }
@@ -101,7 +101,7 @@ game.on("ActionPrototype", async (data) => {
             if (data.data.operation.seat === seat){
                 let operationList = data.data.operation.operation_list;
                 if (operationList != null) {
-                    await aiIns.waitOperation(operationList);
+                    await aiIns.waitOperation(data);
                 }
             }
         }

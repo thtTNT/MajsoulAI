@@ -4,6 +4,7 @@
   "main": "index.mjs",
   "license": "MIT",
   "dependencies": {
-    "mjsoul": "^2.2.0"
+    "mjsoul": "^2.2.0",
+    "riichi": "^1.2.0"
   }
 }

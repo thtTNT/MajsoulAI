@@ -1,7 +1,9 @@
+//手牌管理
 class Hand {
 
     constructor() {
         this.tiles = [];
+        this.compound = [];
     }
 
     initHand(tiles) {
@@ -21,6 +23,18 @@ class Hand {
             throw new Error("需要出的牌不存在")
         }
         this.tiles.splice(index, 1);
+    }
+
+    peng(tile) {
+        this.discard(tile);
+        this.discard(tile);
+        this.compound.push([tile, tile, tile])
+    }
+
+    chi(tile, another1, another2) {
+        this.discard(another1);
+        this.discard(another2);
+        this.compound.push([tile, another1, another2]);
     }
 
     getTiles() {
