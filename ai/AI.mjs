@@ -9,7 +9,19 @@ class AI {
     }
 
     operation(opList) {
-
+        for (let op of opList) {
+            if (op.type === 7) {
+                return op;
+            }
+            if (op.type === 1) {
+                op.discard = this.getDiscard();
+                return op;
+            }
+            if (op.type === 2 || op.type === 3) {
+                op.cancel = true;
+                return op;
+            }
+        }
     }
 
 

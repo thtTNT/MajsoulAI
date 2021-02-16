@@ -1,6 +1,7 @@
 import operator from "./ai/operator.mjs";
 import AIManager from "./ai/AIManager.mjs";
 import MJSoul from "mjsoul"
+import * as readline from "readline";
 
 let mjsoul = new MJSoul({
     url: "wss://gateway-v2.maj-soul.com:6443", //雀魂ws连接地址，可以修改为日服或者国际服的地址
@@ -12,8 +13,8 @@ let game = new MJSoul({
 })
 
 let account_id = -1;
-let tiles = [];
 let seat = -1;
+
 //登陆功能
 let login = async () => {
     console.log("登陆中...")
@@ -24,14 +25,23 @@ let login = async () => {
 
     account_id = data.account_id
 
-    console.log("加入房间...")
-    await mjsoul.sendAsync("joinRoom", {
-        room_id: 96767
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     })
 
-    console.log("准备...")
-    await mjsoul.sendAsync("readyPlay", {
-        ready: true
+    console.log("请输入房间号:")
+    rl.on('line', async (str) => {
+        console.log("加入房间...")
+        await mjsoul.sendAsync("joinRoom", {
+            room_id: Number(str)
+        })
+
+        console.log("准备...")
+        await mjsoul.sendAsync("readyPlay", {
+            ready: true
+        })
     })
 
 }
@@ -59,7 +69,7 @@ let aiIns = new AIManager(new operator(game));
 
 game.on("ActionPrototype", async (data) => {
 
-    console.log(data);
+    // console.log(data);
     if (data.name === "ActionMJStart") {
         console.log("进入游戏!");
     }
@@ -67,7 +77,7 @@ game.on("ActionPrototype", async (data) => {
         await aiIns.onGameStart(data.data.tiles)
     }
     if (data.name === "ActionDealTile") {
-        if (data.data.seat === undefined){
+        if (data.data.seat === undefined) {
             data.data.seat = 0;
         }
 
@@ -76,8 +86,8 @@ game.on("ActionPrototype", async (data) => {
         }
 
         //处理吃碰杠
-        if (data.data.operation !== null){
-            if (data.data.operation.seat === seat){
+        if (data.data.operation !== null) {
+            if (data.data.operation.seat === seat) {
                 let operationList = data.data.operation.operation_list;
                 if (operationList != null) {
                     await aiIns.waitOperation(data);
@@ -87,7 +97,7 @@ game.on("ActionPrototype", async (data) => {
 
     }
     if (data.name === "ActionDiscardTile") {
-        if (data.data.seat === undefined){
+        if (data.data.seat === undefined) {
             data.data.seat = 0;
         }
 
@@ -97,8 +107,8 @@ game.on("ActionPrototype", async (data) => {
             console.log(data.data.seat + "位切牌: " + data.data.tile)
         }
 
-        if (data.data.operation !== null){
-            if (data.data.operation.seat === seat){
+        if (data.data.operation !== null) {
+            if (data.data.operation.seat === seat) {
                 let operationList = data.data.operation.operation_list;
                 if (operationList != null) {
                     await aiIns.waitOperation(data);

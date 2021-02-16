@@ -35,6 +35,13 @@ class operator {
         })
     }
 
+    async cancelChiPengGang() {
+        await this.game.sendAsync("inputChiPengGang", {
+            cancel_operation: 1,
+            timeuse: 1
+        })
+    }
+
 }
 
 export default operator;
